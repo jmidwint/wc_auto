@@ -1,0 +1,96 @@
+<?xml version="1.0"?>
+<launch>
+       <!-- Launch all video and nodes for the hardware platform that has the devices connected 
+          directly to it , such as the video camera & arduino interface. 
+          And launch all the displays as well. 
+         
+          Example of launch commands: 
+          roslaunch wc_auto chair.full.launch 
+
+         --> 
+ 
+        <!-- 1. Launch Camera Handling Node. 
+              There are many args to collect and pass to the video stream generator 
+              of the camera. The defaults can be overriden by the user calling this 
+              launch file with the argument name and value to be overriden.
+
+         Example of launch commands:
+         roslaunch wc_auto chair.full.launch video_stream_provider:=1 buffer_queue_size:=1 
+
+         roslaunch wc_auto chair.full.launch onboard_images_folder:='/media/nvidia/Seagate Backup Plus Drive/Data/WC/DRONET_PERCEPTION/onboard_images' 
+          
+        -->
+    
+  	<arg name="camera_name" default="center" />
+  	<arg name="set_camera_fps" default="30" />
+        <!-- buffer_queue_size denotes the number of frames that the camera queue
+              will hold. When set to 1, then the lastest frame will always be used
+              and the rest will be thrown away. -->
+        
+  	<arg name="buffer_queue_size" default="1" />
+  	<arg name="fps" default="30" />
+  	<arg name="frame_id" default="$(arg camera_name)" />
+        <arg name="camera_info_url" default="" />
+  	<arg name="flip_horizontal" default="false" />
+  	<arg name="flip_vertical" default="false" />
+        <arg name="width" default="0"/>
+        <arg name="height" default="0"/>
+	<arg name="visualize" default="false"/>
+
+  	<!-- video_stream_provider can be a number as a video device or a url of a 
+             video stream. Here it defaults to 1 for the TX2 -->
+  	<arg name="video_stream_provider" default="1" />
+
+        <!-- onboard_images_folder is where to save the images during a test run of the wc. 
+              Currently using a mass storage usb device called Seagate ... 
+         -->
+
+        <arg name="onboard_images_folder" default="/media/nvidia/Seagate Backup Plus Drive/Data/WC/DRONET_PERCEPTION/onboard_images"/>
+
+     
+        <include file="$(find video_stream_opencv)/launch/camera.launch">
+           <arg name="video_stream_provider" value="$(arg video_stream_provider)"/>
+  	   <arg name="camera_name"  value="$(arg camera_name)"/>
+  	   <arg name="set_camera_fps"  value="$(arg set_camera_fps)"  />
+  	   <arg name="buffer_queue_size" value="$(arg buffer_queue_size)"/>
+  	   <arg name="fps"  value="$(arg fps)" />
+  	   <arg name="frame_id" value="$(arg frame_id)" />
+           <arg name="camera_info_url"  value="$(arg camera_info_url)"/>
+  	   <arg name="flip_horizontal" value="$(arg flip_horizontal)"/>
+  	   <arg name="flip_vertical" value="$(arg flip_vertical)"/>
+           <arg name="width" value="$(arg width)"/>
+           <arg name="height"  value="$(arg height)"/>
+	   <arg name="visualize" value="$(arg visualize)"/>     
+        </include>
+
+
+        <!-- 2. Launch Arduino Serial Interface Handling Nodes. -->
+        <include file="$(find wc_llc)/launch/chair.launch">        
+        </include>
+
+
+        <!-- 3. Launch Perception Node. 
+              There are many args to collect and pass to the Perception Node .
+              The defaults can be overriden by the user calling this 
+              launch file with the argument name and value to be overriden.
+        --> 
+       
+          <include file="$(find dronet_perception)/launch/jkm_dronet_launch.launch">
+            <arg name="onboard_images_folder" value="$(arg onboard_images_folder)"/>
+            <arg name="camera_name"  value="$(arg camera_name)"/>        
+          </include> 
+ 
+         <!-- 4. Launch Image Viewer  -->
+       
+       <!-- Image ENTERing CNN -->
+       <node name="ENTER_CNN" pkg="image_view" type="image_view">
+            <remap from="/image" to="$(arg camera_name)/image_raw"/>
+        </node>  
+
+       <!-- Image EXITing CNN -->
+       <node name="EXIT_CNN" pkg="image_view" type="image_view">
+            <remap from="/image" to="/perception"/>
+        </node>  
+
+
+</launch>
