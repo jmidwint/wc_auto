@@ -1,0 +1,45 @@
+<?xml version="1.0"?>
+<launch>
+       <!-- Launch all the nodes to be able to be able to perform perception functions.
+
+            This is used during development to also see how the images are being 
+            interpreted by the CNN perception node that is processing them. 
+
+            This launch file should only be used on platforms that can also display 
+            images. 
+
+   Examples:
+
+      roslaunch wc_auto chair.perception.launch onboard_images_folder:='/media/nvidia/Seagate Backup Plus Drive/Data/WC/DRONET_PERCEPTION/onboard_images'
+
+         --> 
+ 
+ 
+        <!-- Launch Perception Node. 
+
+              There are many args to collect and pass to the Perception Node .
+              The defaults can be overriden by the user calling this 
+              launch file with the argument name and value to be overriden.
+        --> 
+
+        <!-- onboard_images_folder is where to save the images during a test run of the wc. 
+              Currently using a mass storage usb device called Seagate ... 
+         -->
+
+        <arg name="camera_name" default="center" />
+        <arg name="onboard_images_folder" default="/media/nvidia/Seagate Backup Plus Drive/Data/WC/DRONET_PERCEPTION/onboard_images"/>
+       
+          <include file="$(find dronet_perception)/launch/jkm_dronet_launch.launch">
+            <arg name="onboard_images_folder" value="$(arg onboard_images_folder)"/>
+            <arg name="camera_name"  value="$(arg camera_name)"/>        
+          </include> 
+ 
+       <!-- Launch Image Viewer for Output of Perception Node -->
+       
+       <!-- Image EXITing CNN -->
+       <node name="EXIT_CNN" pkg="image_view" type="image_view">
+            <remap from="/image" to="/perception"/>
+       </node>  
+
+
+</launch>

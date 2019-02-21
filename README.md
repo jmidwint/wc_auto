@@ -19,16 +19,20 @@ This is used to launch the ROS nodes and i/f sofware to send control data to the
 In order to run this package the following devices need to be connected and powered up:
   - usb camera 
   - Seagate mass storage device
-  - Usb to Eightfold Smaert Chair Arduino serial port
+  - USB to Eightfold Smaert Chair Arduino serial port
 
 
-Use the following examples to perform the ROS launch command:
+Use the following examples to perform the ROS launch command, when launching on a platform that can also display ROS image_view images:
 
          roslaunch wc_auto chair.full.launch
 
 Here are other examples: 
+
+
          roslaunch wc_auto chair.full.launch video_stream_provider:=1 buffer_queue_size:=1 
 
          roslaunch wc_auto chair.full.launch onboard_images_folder:='/media/nvidia/Seagate Backup Plus Drive/Data/WC/DRONET_PERCEPTION/onboard_images' 
+
+         roslaunch wc_auto chair.full.launch arduino_device_name:="/dev/ttyUSB0"
 
 

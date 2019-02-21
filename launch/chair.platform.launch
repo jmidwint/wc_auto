@@ -1,40 +1,28 @@
 <?xml version="1.0"?>
 <launch>
-       <!-- Launch all the nodes to be able to navigate the chair in autonomous node.
+       <!-- Launch all the nodes to suport the platform, which includes Arduino
+             Serial Interface, Centre Camera, & Image view of Center Camera.
 
-            This is used during development to also see the images being seen by the CNN
-            and how the CNN perception node is processing them. 
+            This is used during development to also see the images being produced 
+            by the  input camera being fed as inpit to the CNN 
+             
             This launch file should only be used on platforms that can also display 
-            images, and in which all devices are directly connect to this platform. 
+            images, and in which the Camera & Arduino Serial Interface are directly
+            connected to this platform. 
 
-            This launch file performs the following Launching Steps:
-              1. Launch Input Camera Handling Nodes
-              2. Launch Serial Arduino Interface Handling Nodes
-              3. Launch Perception Node (default launching the DRONET model)
-              4. Launch the Image Viewer Nodes, to see both the input image
-                  and the output from perception node.  
 
-         
-          Example of launch commands: 
-
-             roslaunch wc_auto chair.full.launch 
-
-             roslaunch wc_auto chair.full.launch video_stream_provider:=1 buffer_queue_size:=1 
-
-             roslaunch wc_auto chair.full.launch onboard_images_folder:='/media/nvidia/Seagate Backup Plus Drive/Data/WC/DRONET_PERCEPTION/onboard_images' 
-
-             roslaunch wc_auto chair.full.launch arduino_device_name:="/dev/ttyUSB0"
-
-         --> 
+          Example(s):
  
+          roslaunch wc_auto chair.platform.launch arduino_device_name:="/dev/ttyUSB0"      
+       -->
+        
+
         <!-- 1. Launch Camera Handling Node. 
             
               There are many args to collect and pass to the video stream generator 
               of the camera. The defaults can be overriden by the user calling this 
               launch file with the argument name and value to be overriden.
-
- 
-          
+         
         -->
     
   	<arg name="camera_name" default="center" />
@@ -84,36 +72,14 @@
             <arg name="arduino_device_baud" value="$(arg arduino_device_baud)"/>       
         </include>
         
-
-        <!-- 3. Launch Perception Node. 
-
-              There are many args to collect and pass to the Perception Node .
-              The defaults can be overriden by the user calling this 
-              launch file with the argument name and value to be overriden.
-        --> 
-
-        <!-- onboard_images_folder is where to save the images during a test run of the wc. 
-              Currently using a mass storage usb device called Seagate ... 
-         -->
-
-        <arg name="onboard_images_folder" default="/media/nvidia/Seagate Backup Plus Drive/Data/WC/DRONET_PERCEPTION/onboard_images"/>
-       
-          <include file="$(find dronet_perception)/launch/jkm_dronet_launch.launch">
-            <arg name="onboard_images_folder" value="$(arg onboard_images_folder)"/>
-            <arg name="camera_name"  value="$(arg camera_name)"/>        
-          </include> 
  
-         <!-- 4. Launch Image Viewer  -->
+       <!-- 3. Launch Image Viewer of Input Camera(s) -->
        
        <!-- Image ENTERing CNN -->
        <node name="ENTER_CNN" pkg="image_view" type="image_view">
             <remap from="/image" to="$(arg camera_name)/image_raw"/>
-       </node>  
+        </node>  
 
-       <!-- Image EXITing CNN -->
-       <node name="EXIT_CNN" pkg="image_view" type="image_view">
-            <remap from="/image" to="/perception"/>
-       </node>  
-
+ 
 
 </launch>
