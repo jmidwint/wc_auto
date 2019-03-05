@@ -11,9 +11,14 @@
             connected to this platform. 
 
 
-          Example(s):
+  Example(s):
  
-          roslaunch wc_auto chair.platform.launch arduino_device_name:="/dev/ttyUSB0"      
+    roslaunch wc_auto chair.platform.launch arduino_device_name:="/dev/ttyUSB0" 
+
+    no display of images: 
+
+    roslaunch wc_auto chair.platform.launch arduino_device_name:="/dev/ttyUSB0" display_images:="0" 
+     
        -->
         
 
@@ -75,10 +80,14 @@
  
        <!-- 3. Launch Image Viewer of Input Camera(s) -->
        
-       <!-- Image ENTERing CNN -->
-       <node name="ENTER_CNN" pkg="image_view" type="image_view">
-            <remap from="/image" to="$(arg camera_name)/image_raw"/>
-        </node>  
+       <arg name="display_images" default="1" />
+       
+       <group if="$(eval arg('display_images') == 1)">
+           <!-- Display Image ENTERing CNN -->
+           <node name="ENTER_CNN" pkg="image_view" type="image_view">
+                <remap from="/image" to="$(arg camera_name)/image_raw"/>
+           </node> 
+       </group> 
 
  
 
