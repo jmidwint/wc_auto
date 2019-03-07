@@ -34,9 +34,13 @@
   	<arg name="set_camera_fps" default="30" />
         <!-- buffer_queue_size denotes the number of frames that the camera queue
               will hold. When set to 1, then the lastest frame will always be used
-              and the rest will be thrown away. -->
+              and the rest will be thrown away. 
+              
+              There is a know race condition when the buffer is set to 1, 
+              so set it to 2. 
+         -->
         
-  	<arg name="buffer_queue_size" default="1" />
+  	<arg name="buffer_queue_size" default="2" />
   	<arg name="fps" default="30" />
   	<arg name="frame_id" default="$(arg camera_name)" />
         <arg name="camera_info_url" default="" />
