@@ -1,11 +1,11 @@
-# Wheelchair Auto-Pilot Sofware 
+# Wheelchair Auto-Pilot Software 
 
 This repository contains the ROS package software used to launch the autonomous system to drive the Eightfold Smart Chair.
 
 
-This package relies on the followingt ROS package:
+This package relies on the following ROS package:
       - wc_llc
-      - dronet_perception 
+      - wc_perception 
       - video_stream_opencv
       - image_view 
 
@@ -31,7 +31,7 @@ Here are other examples:
 
          roslaunch wc_auto chair.full.launch video_stream_provider:=1 buffer_queue_size:=1 
 
-         roslaunch wc_auto chair.full.launch onboard_images_folder:='/media/nvidia/Seagate Backup Plus Drive/Data/WC/DRONET_PERCEPTION/onboard_images' 
+         roslaunch wc_auto chair.full.launch onboard_images_folder:='/media/nvidia/Seagate Backup Plus Drive/Data/WC/WC_PERCEPTION/onboard_images' 
 
          roslaunch wc_auto chair.full.launch arduino_device_name:="/dev/ttyUSB0"
 

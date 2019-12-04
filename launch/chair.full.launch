@@ -21,7 +21,7 @@
 
              roslaunch wc_auto chair.full.launch video_stream_provider:=1 buffer_queue_size:=1 
 
-             roslaunch wc_auto chair.full.launch onboard_images_folder:='/media/nvidia/Seagate Backup Plus Drive/Data/WC/DRONET_PERCEPTION/onboard_images' 
+             roslaunch wc_auto chair.full.launch onboard_images_folder:='/media/nvidia/Seagate Backup Plus Drive/Data/WC/WC_PERCEPTION/onboard_images' 
 
              roslaunch wc_auto chair.full.launch arduino_device_name:="/dev/ttyUSB0"
 
@@ -102,9 +102,9 @@
               Currently using a mass storage usb device called Seagate ... 
          -->
 
-        <arg name="onboard_images_folder" default="/media/nvidia/Seagate Backup Plus Drive/Data/WC/DRONET_PERCEPTION/onboard_images"/>
+        <arg name="onboard_images_folder" default="/media/nvidia/Seagate Backup Plus Drive/Data/WC/WC_PERCEPTION/onboard_images"/>
        
-          <include file="$(find dronet_perception)/launch/jkm_dronet_launch.launch">
+          <include file="$(find wc_perception)/launch/wc_perception.launch">
             <arg name="onboard_images_folder" value="$(arg onboard_images_folder)"/>
             <arg name="camera_name"  value="$(arg camera_name)"/>        
           </include> 
